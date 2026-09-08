@@ -749,7 +749,7 @@ def build_index():
     <aside class="hero-card" data-reveal style="--d:300ms">
       <h4>By the numbers</h4>
       <div class="stat-row"><span class="k">Titles shipped</span><span class="v"><span data-count="12">0</span></span></div>
-      <div class="stat-row"><span class="k">Playable prototypes</span><span class="v"><span data-count="6">0</span></span></div>
+      <div class="stat-row"><span class="k">Playable prototypes</span><span class="v"><span data-count="{proto_n}">0</span></span></div>
       <div class="stat-row"><span class="k">Years in game design</span><span class="v"><span data-count="6">0</span><em>+</em></span></div>
       <div class="stat-row"><span class="k">Designers led</span><span class="v"><span data-count="5">0</span></span></div>
       <div class="stat-row"><span class="k">On-time milestones</span><span class="v"><span data-count="99">0</span><em>%</em></span></div>
@@ -766,7 +766,7 @@ def build_index():
       <div class="play-band-inner">
         <div class="play-band-text">
           <span class="play-band-eyebrow">Playable right now &mdash; no install, no sign-up</span>
-          <h2>Six prototypes you can play in your browser</h2>
+          <h2>Prototypes you can play in your browser, right now</h2>
           <p>
             Every one runs on a real URL, and every one exists to answer a specific design question.
             This is the fastest way to see how I actually work.
@@ -785,7 +785,7 @@ def build_index():
   <div class="shell">
     <div class="section-head">
       <span class="eyebrow" data-reveal>The lab</span>
-      <h2 data-reveal>Three of the six &mdash; open them in a tab</h2>
+      <h2 data-reveal>A few of them &mdash; open one in a tab</h2>
       <p data-reveal>
         A zombie-apocalypse base builder wrapped around a match-3, a 3D bridge-building puzzle
         runner, and a cognitive-training companion for older players. Each was assembled quickly
@@ -794,7 +794,7 @@ def build_index():
     </div>
     <div class="grid three">{featured_proto}</div>
     <div style="margin-top:2.4rem" data-reveal>
-      <a class="btn" href="lab.html">All six prototypes <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn" href="lab.html">See every prototype <span class="arrow" aria-hidden="true">&rarr;</span></a>
     </div>
   </div>
 </section>
@@ -869,7 +869,7 @@ def build_index():
 </section>
 
 </main>
-""".format(marquee=marquee, skills=skill_cards, tl=tl,
+""".format(marquee=marquee, skills=skill_cards, tl=tl, proto_n=len(PROTOTYPES),
            featured_proto=featured_proto, featured_work=featured_work)
 
     return (head("{n} - {t}".format(n=NAME, t=TITLE),
@@ -930,7 +930,7 @@ def build_lab():
   <div class="shell">
     <div class="section-head">
       <span class="eyebrow" data-reveal>Prototypes</span>
-      <h2 data-reveal>Six things you can play right now.</h2>
+      <h2 data-reveal>Things you can play right now.</h2>
       <p class="lead" data-reveal>
         This is where the prototype-first habit actually lives. Each of these was built to answer one
         specific design question - does this loop hold up, does this mechanic read, can two people of
