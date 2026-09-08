@@ -811,3 +811,48 @@ a { color: inherit; text-decoration: none; }
 /* Portrait phone captures need a taller frame, or they float in dead space. */
 .proj-shot.portrait { aspect-ratio: 5 / 4; }
 .proj-shot.portrait img { object-position: center top; }
+
+/* ============================================================
+   17. Prototype card footer - the play bar
+   ============================================================ */
+/* The old footer was a line of small orange text that read as a caption. This
+   is the whole bottom of the card: bright, full-bleed, one big tap target. */
+.proj-play {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.35rem -1.5rem -1.6rem;          /* cancel .proj-body padding */
+  padding: .95rem 1.5rem 1.05rem;
+  color: #17110c;
+  background: linear-gradient(104deg, #ff7a45 0%, #ff9c4f 52%, #ffc46b 100%);
+  transition: filter .28s var(--ease), padding .28s var(--ease-out);
+}
+.proj-play:hover, .proj-play:focus-visible { filter: brightness(1.09) saturate(1.05); }
+.proj-play:focus-visible { outline: 3px solid #fff; outline-offset: -3px; }
+.proj-play:active { filter: brightness(.96); }
+
+.proj-play-word {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  line-height: 1;
+  color: #17110c;
+}
+.proj-play-sub {
+  font-family: var(--font-mono);
+  font-size: .69rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(23,17,12,.78);
+  text-align: right;
+}
+/* the arrow nudges on hover, the usual "this goes somewhere" cue */
+.proj-play-sub span { display: inline-block; transition: transform .28s var(--ease-out); }
+.proj-play:hover .proj-play-sub span { transform: translateX(4px); }
+
+@media (max-width: 420px) {
+  .proj-play { flex-direction: column; align-items: flex-start; gap: .3rem; }
+  .proj-play-sub { text-align: left; }
+}

@@ -560,14 +560,23 @@ def project_card(p, folder, group):
         if p.get("rating"):
             rating = '<span class="proj-rating"><b>{r}</b>&#9733; &middot; {n} ratings</span>'.format(
                 r=p["rating"][0], n=p["rating"][1])
-        link_text = "View on store"
         data_tags = ' data-tags="%s"' % " ".join(p["tags"])
+        # Shipped titles keep the quiet footer: a store link plus the rating.
+        foot = """<div class="proj-foot">
+      <a class="proj-link" href="{url}" target="_blank" rel="noopener">View on store <span aria-hidden="true">&rarr;</span></a>
+      {rating}
+    </div>""".format(url=p["url"], rating=rating)
     else:
         meta = '<span class="by">%s</span>' % esc(p["kicker"])
         tags = "".join('<span class="tag cool">%s</span>' % esc(t) for t in p["stack"])
-        rating = '<span class="proj-rating">Playable in browser</span>'
-        link_text = "Play it"
         data_tags = ""
+        # A prototype's whole footer is the play button - full width, bright,
+        # and the tap target is the entire bar rather than a line of small text.
+        foot = """<a class="proj-play" href="{url}" target="_blank" rel="noopener"
+       aria-label="Play {name} in your browser">
+      <span class="proj-play-word">PLAY</span>
+      <span class="proj-play-sub">Opens in your browser <span aria-hidden="true">&rarr;</span></span>
+    </a>""".format(url=p["url"], name=esc(p["name"]))
 
     icon_html = ('<img class="proj-icon" src="{i}" alt="" loading="lazy">'.format(i=icon)) if icon else ""
 
@@ -582,14 +591,11 @@ def project_card(p, folder, group):
     </div>
     <p>{blurb}</p>
     <div class="proj-tags">{tags}</div>
-    <div class="proj-foot">
-      <a class="proj-link" href="{url}" target="_blank" rel="noopener">{link_text} <span aria-hidden="true">&rarr;</span></a>
-      {rating}
-    </div>
+    {foot}
   </div>
 </article>""".format(data_tags=data_tags, group=group, shot=shot_html, strip=strip,
                      icon=icon_html, name=esc(p["name"]), meta=meta, blurb=esc(p["blurb"]),
-                     tags=tags, url=p["url"], link_text=link_text, rating=rating)
+                     tags=tags, foot=foot)
 
 
 def badge_html(p):
