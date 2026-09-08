@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jotunlegion.github.io/sitemap.xml
