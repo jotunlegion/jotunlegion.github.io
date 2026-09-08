@@ -694,3 +694,60 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 800px) {
   .nav-contact-m { display: block; color: var(--accent) !important; }
 }
+
+/* ============================================================
+   15. Avatar - header mark and the hero identity block
+   ============================================================ */
+/* .mark is an <img> now, so the grid/text rules above no longer apply to it. */
+.brand img.mark {
+  object-fit: cover;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 5px 16px -7px rgba(0,0,0,.9);
+  background: var(--bg-raise);
+}
+
+.hero-who { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.7rem; }
+.hero-who img {
+  width: 72px; height: 72px; flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 10px 26px -12px rgba(0,0,0,.95), 0 0 0 4px rgba(255,122,69,.1);
+}
+.hero-who strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 600;
+  letter-spacing: -.025em;
+  margin-bottom: .18rem;
+}
+/* inside the identity block the role line is inline, not a standalone row */
+.hero-who .hero-role { display: inline-flex; margin-bottom: 0; font-size: .74rem; }
+@media (max-width: 520px) {
+  .hero-who .hero-role { flex-wrap: wrap; }
+}
+
+/* ============================================================
+   16. Gallery strip - some cards carry 15 shots
+   ============================================================ */
+/* Thumbnails used to divide the card width, so a long gallery shrank them to
+   slivers. Fix their size and let the strip scroll instead. */
+.proj-strip {
+  gap: .34rem;
+  padding-bottom: .45rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, #000 92%, transparent);
+}
+.proj-strip button { flex: 0 0 auto; width: 46px; height: 42px; }
+.proj-strip::-webkit-scrollbar { height: 5px; }
+.proj-strip::-webkit-scrollbar-thumb { background: #2b303b; border: 0; border-radius: 6px; }
+.proj-strip::-webkit-scrollbar-track { background: transparent; }
+
+/* Portrait phone captures need a taller frame, or they float in dead space. */
+.proj-shot.portrait { aspect-ratio: 5 / 4; }
+.proj-shot.portrait img { object-position: center top; }

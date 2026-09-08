@@ -40,7 +40,7 @@ in `build.py`'s `footer()`.
 ## Images
 
 - `assets/img/projects/` — pulled from the live App Store, Google Play, Big Fish and itch.io pages
-- `assets/img/prototypes/` — captured from the running builds with Playwright
+- `assets/img/prototypes/` — captured from the running builds (cover shots via Playwright, the rest by hand)
 - `assets/img/life/` — personal photos and one video
 
 ## Prototype hosting

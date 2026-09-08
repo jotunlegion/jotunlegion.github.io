@@ -402,7 +402,10 @@ def head(title, desc, page):
 <meta property="og:url" content="{site}/{page}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#08090c">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23ff7a45'/%3E%3Ctext x='32' y='44' font-family='monospace' font-size='34' font-weight='bold' text-anchor='middle' fill='%2314100d'%3EDB%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:image" content="{site}/assets/img/life/avatar.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -423,7 +426,7 @@ def nav(active):
     return """<header class="nav">
   <div class="nav-inner">
     <a class="brand" href="index.html">
-      <span class="mark" aria-hidden="true">DB</span>
+      <img class="mark" src="assets/img/life/avatar.webp" alt="" width="30" height="30">
       <span>{name}<small>SENIOR GAME DESIGNER</small></span>
     </a>
     <nav class="nav-links" aria-label="Main">{links}<a class="nav-contact-m" href="#" data-contact>Get in touch &rarr;</a></nav>
@@ -698,9 +701,15 @@ def build_index():
 <section class="hero">
   <div class="shell hero-grid">
     <div>
-      <div class="hero-role" data-reveal>
-        <span class="dot" aria-hidden="true"></span> Open to senior design roles
-        <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
+      <div class="hero-who" data-reveal>
+        <img src="assets/img/life/avatar.webp" alt="Dmytro Bondar" width="72" height="72" loading="eager" decoding="async">
+        <div>
+          <strong>Dmytro Bondar</strong>
+          <span class="hero-role">
+            <span class="dot" aria-hidden="true"></span> Open to senior design roles
+            <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
+          </span>
+        </div>
       </div>
       <h1 data-reveal style="--d:60ms">I build <span class="grad">playable prototypes</span>, then design around what works.</h1>
       <p class="lead" data-reveal style="--d:130ms">
@@ -964,7 +973,7 @@ LIFE = [
     },
     {
         "kicker": "Being useful",
-        "title": "Five years on the water as a rescuer",
+        "title": "Two years on the water as a rescuer",
         "shots": ["rescue-1.webp", "rescue-2.webp"],
         "text": [
             "It mattered to me to do something with an obvious point to it, so I worked as a "
@@ -1130,7 +1139,7 @@ def build_about():
       <div data-reveal style="--d:120ms">
         <p class="lead">
           Everything else on this site is about work. This page is about the person doing it, which
-          in my case means a village on a river, five years pulling people out of the water, a
+          in my case means a village on a river, two years pulling people out of the water, a
           lieutenant's shoulder boards, a great many mountains, and a shelf of gothic horror that
           has quietly taken over one wall.
         </p>
@@ -1168,7 +1177,7 @@ def build_about():
 """.format(facts=fact_html, blocks=blocks)
 
     return (head("About me - " + NAME,
-                 "The parts that are not on the CV: a village in Vinnytsia region, five years as a "
+                 "The parts that are not on the CV: a village in Vinnytsia region, two years as a "
                  "rescuer, service as an infantry officer, mountains, board games and gothic horror.",
                  "about.html")
             + nav("about.html") + body + footer())
