@@ -14,7 +14,9 @@ from PIL import Image
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
-SITE = "https://jotunlegion.github.io"
+# Canonical home. The GitHub Pages URL (jotunlegion.github.io) still serves the
+# same build as a mirror, but the name people should see is this one.
+SITE = "https://dmytrobondar.pages.dev"
 NAME = "Dmytro Bondar"
 TITLE = "Senior Game Designer - AI-first Prototyping & LiveOps"
 EMAIL = "dimabondar2812@gmail.com"
@@ -349,6 +351,15 @@ PROTOTYPES.sort(key=lambda p: _PROTO_ORDER.index(p["slug"]))
 
 # --------------------------------------------------------------------- helpers
 
+def clean_url(page):
+    """Cloudflare Pages serves /about, not /about.html, and 308s the .html form.
+    Canonical links and the sitemap use the clean path so neither is a redirect;
+    the in-page links stay as .html so the GitHub Pages mirror keeps working."""
+    if page == "index.html":
+        return ""
+    return page[:-5] if page.endswith(".html") else page
+
+
 def esc(s):
     return html.escape(str(s), quote=True)
 
@@ -395,11 +406,11 @@ def head(title, desc, page):
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <meta name="author" content="{name}">
-<link rel="canonical" href="{site}/{page}">
+<link rel="canonical" href="{site}/{clean}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
-<meta property="og:url" content="{site}/{page}">
+<meta property="og:url" content="{site}/{clean}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#08090c">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -413,7 +424,8 @@ def head(title, desc, page):
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-""".format(title=esc(title), desc=esc(desc), name=esc(NAME), site=SITE, page=page)
+""".format(title=esc(title), desc=esc(desc), name=esc(NAME), site=SITE,
+           page=page, clean=clean_url(page))
 
 
 def nav(active):
@@ -701,15 +713,9 @@ def build_index():
 <section class="hero">
   <div class="shell hero-grid">
     <div>
-      <div class="hero-who" data-reveal>
-        <img src="assets/img/life/avatar.webp" alt="Dmytro Bondar" width="72" height="72" loading="eager" decoding="async">
-        <div>
-          <strong>Dmytro Bondar</strong>
-          <span class="hero-role">
-            <span class="dot" aria-hidden="true"></span> Open to senior design roles
-            <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
-          </span>
-        </div>
+      <div class="hero-role" data-reveal>
+        <span class="dot" aria-hidden="true"></span> Open to senior design roles
+        <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
       </div>
       <h1 data-reveal style="--d:60ms">I build <span class="grad">playable prototypes</span>, then design around what works.</h1>
       <p class="lead" data-reveal style="--d:130ms">
@@ -729,7 +735,12 @@ def build_index():
         <a class="btn ghost" href="work.html">See the shipped work</a>
       </div>
     </div>
-    <aside class="hero-card" data-reveal style="--d:260ms">
+    <div class="hero-side">
+    <figure class="hero-photo" data-reveal style="--d:200ms">
+      <img src="assets/img/life/portrait.webp" alt="Dmytro Bondar" width="600" height="750" loading="eager" decoding="async">
+      <figcaption>Dmytro Bondar &middot; Kyiv</figcaption>
+    </figure>
+    <aside class="hero-card" data-reveal style="--d:300ms">
       <h4>By the numbers</h4>
       <div class="stat-row"><span class="k">Titles shipped</span><span class="v"><span data-count="12">0</span></span></div>
       <div class="stat-row"><span class="k">Playable prototypes</span><span class="v"><span data-count="6">0</span></span></div>
@@ -737,6 +748,7 @@ def build_index():
       <div class="stat-row"><span class="k">Designers led</span><span class="v"><span data-count="5">0</span></span></div>
       <div class="stat-row"><span class="k">On-time milestones</span><span class="v"><span data-count="99">0</span><em>%</em></span></div>
     </aside>
+    </div>
   </div>
 </section>
 
@@ -744,19 +756,22 @@ def build_index():
 
 <section class="section" style="padding-bottom:0">
   <div class="shell">
-    <div class="play-band" data-reveal>
+    <a class="play-band" href="lab.html" data-reveal>
       <div class="play-band-inner">
-        <div>
-          <span class="eyebrow">Playable right now</span>
-          <h2>Six prototypes. No install, no sign-up &mdash; just click and play.</h2>
+        <div class="play-band-text">
+          <span class="play-band-eyebrow">Playable right now &mdash; no install, no sign-up</span>
+          <h2>Six prototypes you can play in your browser</h2>
           <p>
-            Every one of them runs in your browser, and every one exists to answer a specific design
-            question. This is the fastest way to see how I actually work.
+            Every one runs on a real URL, and every one exists to answer a specific design question.
+            This is the fastest way to see how I actually work.
           </p>
         </div>
-        <a class="btn btn-xl" href="lab.html">Play them now <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <span class="play-band-cta">
+          <span class="play-word">PLAY</span>
+          <span class="play-sub">Tap anywhere on this panel <span aria-hidden="true">&rarr;</span></span>
+        </span>
       </div>
-    </div>
+    </a>
   </div>
 </section>
 
@@ -1183,18 +1198,45 @@ def build_about():
             + nav("about.html") + body + footer())
 
 
+
+def build_404():
+    body = """<main id="main">
+<section class="section">
+  <div class="shell" style="max-width:60ch">
+    <span class="eyebrow" data-reveal>Error 404</span>
+    <h2 data-reveal>This page does not exist.</h2>
+    <p class="lead" style="margin-top:1.2rem" data-reveal>
+      Which is a shame, because most of the pages here do. Try the prototypes &mdash; that is where
+      the interesting things live &mdash; or head back to the start.
+    </p>
+    <div class="hero-actions" data-reveal>
+      <a class="btn btn-xl" href="lab.html">Play the prototypes <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn ghost" href="index.html">Back to the home page</a>
+    </div>
+  </div>
+</section>
+</main>
+"""
+    return (head("Page not found - " + NAME,
+                 "That page does not exist. Try the prototypes or the home page.",
+                 "404.html")
+            + nav("") + body + footer())
+
+
 # ------------------------------------------------------------------------ main
 
 if __name__ == "__main__":
     pages = {"index.html": build_index(), "lab.html": build_lab(),
-             "work.html": build_work(), "about.html": build_about()}
+             "work.html": build_work(), "about.html": build_about(),
+             "404.html": build_404()}
     for fname, content in pages.items():
         with open(os.path.join(ROOT, fname), "w", encoding="utf-8") as f:
             f.write(content)
         print("wrote %-12s %6d bytes" % (fname, len(content.encode("utf-8"))))
 
     # sitemap + robots so the pages are indexable
-    urls = "".join("  <url><loc>%s/%s</loc></url>\n" % (SITE, p) for p in pages)
+    urls = "".join("  <url><loc>%s/%s</loc></url>\n" % (SITE, clean_url(p))
+                   for p in pages if p.endswith(".html") and p != "404.html")
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n%s</urlset>\n' % urls)

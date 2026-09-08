@@ -6,17 +6,17 @@
 <title>Dmytro Bondar - Senior Game Designer - AI-first Prototyping &amp; LiveOps</title>
 <meta name="description" content="Senior game designer with 12 shipped titles across casual, kids and puzzle genres. AI-first prototyping, LiveOps and design team leadership.">
 <meta name="author" content="Dmytro Bondar">
-<link rel="canonical" href="https://jotunlegion.github.io/index.html">
+<link rel="canonical" href="https://dmytrobondar.pages.dev/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Dmytro Bondar - Senior Game Designer - AI-first Prototyping &amp; LiveOps">
 <meta property="og:description" content="Senior game designer with 12 shipped titles across casual, kids and puzzle genres. AI-first prototyping, LiveOps and design team leadership.">
-<meta property="og:url" content="https://jotunlegion.github.io/index.html">
+<meta property="og:url" content="https://dmytrobondar.pages.dev/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#08090c">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta property="og:image" content="https://jotunlegion.github.io/assets/img/life/avatar.webp">
+<meta property="og:image" content="https://dmytrobondar.pages.dev/assets/img/life/avatar.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -40,15 +40,9 @@
 <section class="hero">
   <div class="shell hero-grid">
     <div>
-      <div class="hero-who" data-reveal>
-        <img src="assets/img/life/avatar.webp" alt="Dmytro Bondar" width="72" height="72" loading="eager" decoding="async">
-        <div>
-          <strong>Dmytro Bondar</strong>
-          <span class="hero-role">
-            <span class="dot" aria-hidden="true"></span> Open to senior design roles
-            <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
-          </span>
-        </div>
+      <div class="hero-role" data-reveal>
+        <span class="dot" aria-hidden="true"></span> Open to senior design roles
+        <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
       </div>
       <h1 data-reveal style="--d:60ms">I build <span class="grad">playable prototypes</span>, then design around what works.</h1>
       <p class="lead" data-reveal style="--d:130ms">
@@ -68,7 +62,12 @@
         <a class="btn ghost" href="work.html">See the shipped work</a>
       </div>
     </div>
-    <aside class="hero-card" data-reveal style="--d:260ms">
+    <div class="hero-side">
+    <figure class="hero-photo" data-reveal style="--d:200ms">
+      <img src="assets/img/life/portrait.webp" alt="Dmytro Bondar" width="600" height="750" loading="eager" decoding="async">
+      <figcaption>Dmytro Bondar &middot; Kyiv</figcaption>
+    </figure>
+    <aside class="hero-card" data-reveal style="--d:300ms">
       <h4>By the numbers</h4>
       <div class="stat-row"><span class="k">Titles shipped</span><span class="v"><span data-count="12">0</span></span></div>
       <div class="stat-row"><span class="k">Playable prototypes</span><span class="v"><span data-count="6">0</span></span></div>
@@ -76,6 +75,7 @@
       <div class="stat-row"><span class="k">Designers led</span><span class="v"><span data-count="5">0</span></span></div>
       <div class="stat-row"><span class="k">On-time milestones</span><span class="v"><span data-count="99">0</span><em>%</em></span></div>
     </aside>
+    </div>
   </div>
 </section>
 
@@ -83,19 +83,22 @@
 
 <section class="section" style="padding-bottom:0">
   <div class="shell">
-    <div class="play-band" data-reveal>
+    <a class="play-band" href="lab.html" data-reveal>
       <div class="play-band-inner">
-        <div>
-          <span class="eyebrow">Playable right now</span>
-          <h2>Six prototypes. No install, no sign-up &mdash; just click and play.</h2>
+        <div class="play-band-text">
+          <span class="play-band-eyebrow">Playable right now &mdash; no install, no sign-up</span>
+          <h2>Six prototypes you can play in your browser</h2>
           <p>
-            Every one of them runs in your browser, and every one exists to answer a specific design
-            question. This is the fastest way to see how I actually work.
+            Every one runs on a real URL, and every one exists to answer a specific design question.
+            This is the fastest way to see how I actually work.
           </p>
         </div>
-        <a class="btn btn-xl" href="lab.html">Play them now <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <span class="play-band-cta">
+          <span class="play-word">PLAY</span>
+          <span class="play-sub">Tap anywhere on this panel <span aria-hidden="true">&rarr;</span></span>
+        </span>
       </div>
-    </div>
+    </a>
   </div>
 </section>
 
