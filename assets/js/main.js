@@ -192,12 +192,15 @@
     });
 
     lb.querySelector('.lb-close').addEventListener('click', close);
-    lb.querySelector('.prev').addEventListener('click', function () { show(at - 1); });
-    lb.querySelector('.next').addEventListener('click', function () { show(at + 1); });
+    // `set` is empty on pages with no project cards - the about page binds its
+    // own handlers to the same buttons, so bail out instead of indexing nothing.
+    lb.querySelector('.prev').addEventListener('click', function () { if (set.length) show(at - 1); });
+    lb.querySelector('.next').addEventListener('click', function () { if (set.length) show(at + 1); });
     lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
     document.addEventListener('keydown', function (e) {
       if (!lb.classList.contains('open')) return;
       if (e.key === 'Escape') close();
+      if (!set.length) return;
       if (e.key === 'ArrowLeft') show(at - 1);
       if (e.key === 'ArrowRight') show(at + 1);
     });
@@ -219,6 +222,121 @@
         card.classList.toggle('hidden', !match);
       });
     });
+  }
+
+  /* ---------- contact dialog ----------
+     The page is static, so the message goes through FormSubmit, which relays
+     it to the inbox. Everything still degrades: if the request fails we hand
+     the visitor a mailto link with their text already in it. */
+  var modal = document.getElementById('contact');
+  if (modal) {
+    var form = modal.querySelector('form');
+    var status = modal.querySelector('.form-status');
+    var submit = modal.querySelector('button[type=submit]');
+    var opener = null;
+
+    var openModal = function (e) {
+      if (e) e.preventDefault();
+      opener = document.activeElement;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      window.setTimeout(function () { var f = form.querySelector('input'); if (f) f.focus(); }, 90);
+    };
+    var closeModal = function () {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      if (opener && opener.focus) opener.focus();
+    };
+
+    document.querySelectorAll('[data-contact]').forEach(function (el) {
+      el.addEventListener('click', openModal);
+    });
+    modal.querySelector('.modal-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    // keep focus inside the dialog while it is open
+    modal.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var f = modal.querySelectorAll('button, input, textarea, a[href]');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        subject: form.subject.value.trim() || 'Message from jotunlegion.github.io',
+        message: form.message.value.trim(),
+        _template: 'table',
+        _captcha: 'false'
+      };
+      if (!data.name || !data.email || !data.message) {
+        status.className = 'form-status err';
+        status.textContent = 'Please fill in your name, email and message.';
+        return;
+      }
+      status.className = 'form-status';
+      status.textContent = 'Sending…';
+      submit.setAttribute('aria-busy', 'true');
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); })
+        .then(function () {
+          status.className = 'form-status ok';
+          status.textContent = 'Sent — thank you. I read every message and usually reply within a day or two.';
+          form.reset();
+        })
+        .catch(function () {
+          var body = encodeURIComponent(data.message + '\n\n— ' + data.name + ' (' + data.email + ')');
+          var to = form.dataset.mailto;
+          status.className = 'form-status err';
+          status.innerHTML = 'That did not go through. You can ' +
+            '<a href="mailto:' + to + '?subject=' + encodeURIComponent(data.subject) + '&body=' + body + '">' +
+            'send it from your own mail app instead</a>.';
+        })
+        .then(function () { submit.removeAttribute('aria-busy'); });
+    });
+  }
+
+  /* ---------- lightbox for the about-page photos ---------- */
+  var lb2 = document.getElementById('lightbox');
+  if (lb2) {
+    var photos = Array.prototype.slice.call(document.querySelectorAll('.shots img'));
+    if (photos.length) {
+      var img2 = lb2.querySelector('img');
+      var cap2 = lb2.querySelector('figcaption');
+      var at2 = 0;
+      var show2 = function (i) {
+        at2 = (i + photos.length) % photos.length;
+        img2.src = photos[at2].dataset.full || photos[at2].src;
+        img2.alt = photos[at2].alt;
+        cap2.textContent = photos[at2].alt;
+      };
+      photos.forEach(function (im, i) {
+        im.addEventListener('click', function () {
+          show2(i);
+          lb2.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      lb2.querySelector('.prev').addEventListener('click', function () {
+        if (photos.length && lb2.classList.contains('open')) show2(at2 - 1);
+      });
+      lb2.querySelector('.next').addEventListener('click', function () {
+        if (photos.length && lb2.classList.contains('open')) show2(at2 + 1);
+      });
+    }
   }
 
   /* ---------- footer year ---------- */

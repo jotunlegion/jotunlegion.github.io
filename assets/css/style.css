@@ -499,3 +499,198 @@ a { color: inherit; text-decoration: none; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: #262a34; border-radius: 10px; border: 3px solid var(--bg); }
 ::-webkit-scrollbar-thumb:hover { background: #343947; }
+
+/* ============================================================
+   12. Play band - the prototypes CTA, deliberately loud
+   ============================================================ */
+.play-band {
+  position: relative;
+  margin: clamp(2rem, 5vw, 3.5rem) 0;
+  overflow: hidden;
+}
+.play-band-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(2rem, 4.5vw, 3.4rem);
+  border: 1px solid rgba(255,122,69,.34);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(90% 130% at 88% 0%, rgba(255,122,69,.2), transparent 62%),
+    radial-gradient(70% 120% at 5% 100%, rgba(111,140,255,.16), transparent 60%),
+    linear-gradient(150deg, rgba(255,255,255,.05), rgba(255,255,255,.014));
+  backdrop-filter: blur(8px);
+}
+@media (max-width: 860px) { .play-band-inner { grid-template-columns: 1fr; } }
+.play-band h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); margin-bottom: .9rem; }
+.play-band p { max-width: 54ch; font-size: .99rem; margin: 0; }
+
+.btn-xl {
+  padding: 1.15rem 2.3rem;
+  font-size: 1.12rem;
+  border-radius: 100px;
+  box-shadow: 0 16px 40px -14px rgba(255,122,69,.7);
+  white-space: nowrap;
+}
+.btn-xl:hover { box-shadow: 0 22px 52px -14px rgba(255,122,69,.85); transform: translateY(-3px); }
+/* a slow breathing ring so the eye lands here first */
+.btn-xl::after {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,122,69,.55);
+  animation: pulse 2.8s var(--ease) infinite;
+  pointer-events: none;
+}
+.btn-xl { position: relative; }
+@keyframes pulse {
+  0%   { transform: scale(1);    opacity: .8; }
+  70%  { transform: scale(1.13); opacity: 0;  }
+  100% { transform: scale(1.13); opacity: 0;  }
+}
+@media (prefers-reduced-motion: reduce) { .btn-xl::after { animation: none; opacity: .5; } }
+
+/* ============================================================
+   13. Contact dialog
+   ============================================================ */
+.modal {
+  position: fixed; inset: 0; z-index: 220;
+  display: none; place-items: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background: rgba(4,5,8,.8);
+  backdrop-filter: blur(12px);
+}
+.modal.open { display: grid; animation: lbin .28s var(--ease-out); }
+.modal-card {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: 90vh; overflow-y: auto;
+  padding: clamp(1.6rem, 3.6vw, 2.4rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(158deg, #14161d, #0b0d12);
+  box-shadow: 0 40px 90px -40px #000;
+  animation: rise .38s var(--ease-out);
+}
+@keyframes rise { from { transform: translateY(14px); opacity: .4; } to { transform: none; opacity: 1; } }
+.modal-card h3 { font-size: 1.55rem; margin-bottom: .55rem; }
+.modal-card > p { font-size: .95rem; margin-bottom: 1.5rem; }
+
+.field { display: grid; gap: .42rem; margin-bottom: 1rem; }
+.field label { font-family: var(--font-mono); font-size: .69rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.field input, .field textarea {
+  width: 100%;
+  padding: .78rem .95rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.035);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: .96rem;
+  transition: border-color .22s, background .22s;
+}
+.field textarea { resize: vertical; min-height: 122px; line-height: 1.6; }
+.field input::placeholder, .field textarea::placeholder { color: var(--faint); }
+.field input:focus, .field textarea:focus {
+  outline: none;
+  border-color: rgba(255,122,69,.6);
+  background: rgba(255,255,255,.06);
+}
+.field input:user-invalid, .field textarea:user-invalid { border-color: rgba(255,90,90,.6); }
+
+.modal-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; margin-top: 1.4rem; }
+.form-note { font-size: .82rem; color: var(--muted); margin-top: 1.2rem; }
+.form-note a { color: var(--accent); }
+.form-status { font-size: .9rem; margin-top: 1rem; min-height: 1.2em; }
+.form-status.ok   { color: var(--mint); }
+.form-status.err  { color: #ff8f8f; }
+.btn[aria-busy='true'] { opacity: .62; pointer-events: none; }
+
+.modal-close {
+  position: absolute; top: 1.2rem; right: 1.2rem;
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: rgba(255,255,255,.05); color: var(--text);
+  font-size: 1.1rem; cursor: pointer;
+  transition: background .22s, transform .22s var(--ease-out);
+}
+.modal-close:hover { background: rgba(255,255,255,.14); transform: scale(1.07); }
+
+/* ============================================================
+   14. About page
+   ============================================================ */
+.about-hero { display: grid; grid-template-columns: minmax(0,300px) minmax(0,1fr); gap: clamp(1.8rem, 4.5vw, 3.5rem); align-items: center; }
+@media (max-width: 780px) { .about-hero { grid-template-columns: 1fr; } }
+.about-portrait {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-raise);
+  aspect-ratio: 4 / 5;
+}
+.about-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about-portrait::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(8,9,12,.55));
+  pointer-events: none;
+}
+
+/* Alternating story blocks */
+.story { display: grid; gap: clamp(3.5rem, 8vw, 6.5rem); }
+.story-item { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); gap: clamp(1.6rem, 4vw, 3.2rem); align-items: center; }
+.story-item:nth-child(even) .story-text { order: 2; }
+@media (max-width: 820px) {
+  .story-item { grid-template-columns: 1fr; }
+  .story-item:nth-child(even) .story-text { order: 0; }
+}
+.story-text h3 { font-size: clamp(1.5rem, 2.8vw, 2.05rem); margin-bottom: 1rem; }
+.story-text p { font-size: 1rem; }
+.story-kicker {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--font-mono); font-size: .69rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: .85rem;
+}
+.story-kicker .num { color: var(--faint); }
+
+/* Photo cluster: first image large, the rest tucked beside it */
+.shots { display: grid; gap: .6rem; grid-template-columns: repeat(2, 1fr); }
+.shots.one { grid-template-columns: 1fr; }
+.shots figure { margin: 0; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--line); background: var(--bg-raise); }
+.shots figure:first-child:nth-last-child(3) { grid-column: 1 / -1; }
+.shots img, .shots video {
+  width: 100%; height: 100%; display: block; object-fit: cover;
+  aspect-ratio: 4 / 3;
+  transition: transform .7s var(--ease-out), filter .4s;
+  cursor: zoom-in;
+}
+.shots figure:hover img { transform: scale(1.045); }
+.shots video { cursor: default; }
+.shots.tall img { aspect-ratio: 3 / 4; }
+
+.fact-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+.fact {
+  padding: 1.2rem 1.3rem;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface);
+}
+.fact .k { font-family: var(--font-mono); font-size: .67rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .45rem; }
+.fact .v { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; letter-spacing: -.02em; }
+
+.quote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1.4rem;
+  font-size: clamp(1.1rem, 2.1vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -.02em;
+}
+
+/* The header CTA is hidden on narrow screens, so the burger menu carries it. */
+.nav-contact-m { display: none; }
+@media (max-width: 800px) {
+  .nav-contact-m { display: block; color: var(--accent) !important; }
+}

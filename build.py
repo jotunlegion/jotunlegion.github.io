@@ -341,6 +341,12 @@ PROTOTYPES = [
     },
 ]
 
+# Prototypes lead the site, so their order is deliberate: the two most
+# finished builds first, the deepest systems piece last.
+_PROTO_ORDER = ["warmatch", "gravity-bridge", "floramenta",
+                "binitown", "pixeldron", "they-will-make-more"]
+PROTOTYPES.sort(key=lambda p: _PROTO_ORDER.index(p["slug"]))
+
 # --------------------------------------------------------------------- helpers
 
 def esc(s):
@@ -408,7 +414,8 @@ def head(title, desc, page):
 
 
 def nav(active):
-    items = [("index.html", "Home"), ("work.html", "Shipped work"), ("lab.html", "Prototypes")]
+    items = [("index.html", "Home"), ("lab.html", "Prototypes"),
+             ("work.html", "Shipped work"), ("about.html", "About me")]
     links = "".join(
         '<a href="{h}"{c}>{t}</a>'.format(h=h, t=t, c=' class="active" aria-current="page"' if h == active else "")
         for h, t in items
@@ -419,18 +426,18 @@ def nav(active):
       <span class="mark" aria-hidden="true">DB</span>
       <span>{name}<small>SENIOR GAME DESIGNER</small></span>
     </a>
-    <nav class="nav-links" aria-label="Main">{links}</nav>
-    <a class="btn nav-cta" href="mailto:{email}">Get in touch <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    <nav class="nav-links" aria-label="Main">{links}<a class="nav-contact-m" href="#" data-contact>Get in touch &rarr;</a></nav>
+    <button class="btn nav-cta" type="button" data-contact>Get in touch <span class="arrow" aria-hidden="true">&rarr;</span></button>
     <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </header>
-""".format(name=esc(NAME), links=links, email=EMAIL)
+""".format(name=esc(NAME), links=links)
 
 
 def footer():
     return """<footer class="footer">
   <div class="shell">
-    <p class="big-cta" data-reveal>Have a game that needs a designer?<br><a href="mailto:{email}">{email}</a></p>
+    <p class="big-cta" data-reveal>Have a game that needs a designer?<br><a href="#" data-contact>Write me a message &rarr;</a></p>
     <div class="footer-grid" style="margin-top:3.2rem">
       <div>
         <h4>About this site</h4>
@@ -440,14 +447,16 @@ def footer():
         <h4>Pages</h4>
         <div class="footer-list">
           <a href="index.html">Home</a>
-          <a href="work.html">Shipped work</a>
           <a href="lab.html">Prototypes</a>
+          <a href="work.html">Shipped work</a>
+          <a href="about.html">About me</a>
         </div>
       </div>
       <div>
         <h4>Elsewhere</h4>
         <div class="footer-list">
-          <a href="mailto:{email}">Email</a>
+          <a href="#" data-contact>Send a message</a>
+          <a href="mailto:{email}">{email}</a>
           <a href="{linkedin}" target="_blank" rel="noopener">LinkedIn</a>
           <a href="{github}" target="_blank" rel="noopener">GitHub</a>
           <a href="tel:{phoneraw}">{phone}</a>
@@ -466,6 +475,38 @@ def footer():
   <button class="lb-nav prev" aria-label="Previous">&#8249;</button>
   <button class="lb-nav next" aria-label="Next">&#8250;</button>
   <figure><img alt=""><figcaption></figcaption></figure>
+</div>
+
+<div class="modal" id="contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+  <div class="modal-card">
+    <button class="modal-close" type="button" aria-label="Close">&times;</button>
+    <h3 id="contact-title">Say hello</h3>
+    <p>A role, a project, a question about something on this site &mdash; all welcome. Write below and it lands straight in my inbox.</p>
+    <form action="https://formsubmit.co/ajax/{email}" method="post" data-mailto="{email}" novalidate>
+      <div class="field">
+        <label for="cf-name">Your name</label>
+        <input id="cf-name" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required>
+      </div>
+      <div class="field">
+        <label for="cf-email">Your email</label>
+        <input id="cf-email" name="email" type="email" autocomplete="email" placeholder="jane@studio.com" required>
+      </div>
+      <div class="field">
+        <label for="cf-subject">Subject</label>
+        <input id="cf-subject" name="subject" type="text" placeholder="Senior game designer role">
+      </div>
+      <div class="field">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" placeholder="Tell me what you are building." required></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" type="submit">Send message <span class="arrow" aria-hidden="true">&rarr;</span></button>
+        <a class="btn ghost" href="mailto:{email}">Use my mail app instead</a>
+      </div>
+      <p class="form-status" role="status" aria-live="polite"></p>
+      <p class="form-note">Or reach me directly: <a href="mailto:{email}">{email}</a> &middot; <a href="tel:{phoneraw}">{phone}</a></p>
+    </form>
+  </div>
 </div>
 
 <script src="assets/js/main.js"></script>
@@ -646,8 +687,11 @@ def build_index():
         <div class="proj-tags" style="margin-top:1rem">{lis}</div>
       </div>""".format(t=title, lis=lis)
 
-    featured = "".join(project_card(p, "projects", "feat")
-                       for p in PROJECTS if p["slug"] in ("rainbow-high", "cats-care", "ws-purrfect-horror"))
+    featured_proto = "".join(project_card(p, "prototypes", "hp")
+                             for p in PROTOTYPES[:3])
+    featured_work = "".join(
+        project_card(p, "projects", "feat")
+        for p in PROJECTS if p["slug"] in ("rainbow-high", "cats-care", "ws-purrfect-horror"))
 
     body = """<main id="main">
 
@@ -658,33 +702,74 @@ def build_index():
         <span class="dot" aria-hidden="true"></span> Open to senior design roles
         <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
       </div>
-      <h1 data-reveal style="--d:60ms">I design games that <span class="grad">reach the store</span>, then keep improving them.</h1>
+      <h1 data-reveal style="--d:60ms">I build <span class="grad">playable prototypes</span>, then design around what works.</h1>
       <p class="lead" data-reveal style="--d:130ms">
-        I am a senior game designer working across casual, kids and puzzle genres, in Unity, Unreal
-        and increasingly in the browser. Twelve shipped titles, most of them carried from a blank
-        page to release; three years leading a design team; and a current practice built around
-        AI-first prototyping - getting an idea playable fast enough that the design document can
-        describe something real instead of something hoped for.
+        I am a game designer with experience across casual genres, puzzle games, indie projects,
+        Unity and UE4, focused these days on AI-driven prototyping, LiveOps, team organisation and
+        metrics-based product improvement. At Bini Games I have worked on a run of kids' titles,
+        including Rainbow High Colouring, which entered the Top 50 new successful kids' games and
+        reached hundreds of thousands of downloads across Android and iOS with a strong focus on
+        organic traffic. As Head of Game Designers at GrandMA Studios I managed a team of five
+        designers and rebuilt the production pipeline from scratch, improving on-time milestone
+        delivery from under 10% to roughly 99%. I work prototype-first: the GDD is built around a
+        validated prototype, which is what makes documentation practical and production-ready
+        rather than aspirational.
       </p>
       <div class="hero-actions" data-reveal style="--d:200ms">
-        <a class="btn" href="work.html">See the shipped work <span class="arrow" aria-hidden="true">&rarr;</span></a>
-        <a class="btn ghost" href="lab.html">Play the prototypes</a>
+        <a class="btn btn-xl" href="lab.html">Play the prototypes <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="btn ghost" href="work.html">See the shipped work</a>
       </div>
     </div>
     <aside class="hero-card" data-reveal style="--d:260ms">
       <h4>By the numbers</h4>
       <div class="stat-row"><span class="k">Titles shipped</span><span class="v"><span data-count="12">0</span></span></div>
+      <div class="stat-row"><span class="k">Playable prototypes</span><span class="v"><span data-count="6">0</span></span></div>
       <div class="stat-row"><span class="k">Years in game design</span><span class="v"><span data-count="6">0</span><em>+</em></span></div>
       <div class="stat-row"><span class="k">Designers led</span><span class="v"><span data-count="5">0</span></span></div>
       <div class="stat-row"><span class="k">On-time milestones</span><span class="v"><span data-count="99">0</span><em>%</em></span></div>
-      <div class="stat-row"><span class="k">Playable prototypes</span><span class="v"><span data-count="6">0</span></span></div>
     </aside>
   </div>
 </section>
 
 <div class="marquee" aria-hidden="true"><div class="marquee-track">{marquee}</div></div>
 
+<section class="section" style="padding-bottom:0">
+  <div class="shell">
+    <div class="play-band" data-reveal>
+      <div class="play-band-inner">
+        <div>
+          <span class="eyebrow">Playable right now</span>
+          <h2>Six prototypes. No install, no sign-up &mdash; just click and play.</h2>
+          <p>
+            Every one of them runs in your browser, and every one exists to answer a specific design
+            question. This is the fastest way to see how I actually work.
+          </p>
+        </div>
+        <a class="btn btn-xl" href="lab.html">Play them now <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section">
+  <div class="shell">
+    <div class="section-head">
+      <span class="eyebrow" data-reveal>The lab</span>
+      <h2 data-reveal>Three of the six &mdash; open them in a tab</h2>
+      <p data-reveal>
+        A zombie-apocalypse base builder wrapped around a match-3, a 3D bridge-building puzzle
+        runner, and a cognitive-training companion for older players. Each was assembled quickly
+        with AI assistance, then tuned by hand until the loop actually held up.
+      </p>
+    </div>
+    <div class="grid three">{featured_proto}</div>
+    <div style="margin-top:2.4rem" data-reveal>
+      <a class="btn" href="lab.html">All six prototypes <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
   <div class="shell">
     <div class="section-head">
       <span class="eyebrow" data-reveal>How I work</span>
@@ -692,13 +777,28 @@ def build_index():
       <p class="lead" data-reveal>
         Most design documents are written before anyone knows whether the thing is fun, which is why
         so many of them are quietly abandoned two sprints in. I work the other way round: build the
-        smallest playable version first - these days with Claude and AI-generated art, which
-        compresses that step from weeks to days - and only then write the GDD, describing the build
-        the team can already open. The document becomes a record of decisions that survived contact
-        with a real player, and production stops arguing about hypotheticals.
+        smallest playable version first &mdash; these days with Claude and AI-generated art, which
+        compresses that step from weeks to days &mdash; and only then write the GDD, describing the
+        build the team can already open. The document becomes a record of decisions that survived
+        contact with a real player, and production stops arguing about hypotheticals.
       </p>
     </div>
     <div class="grid four">{skills}</div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="shell">
+    <div class="section-head">
+      <span class="eyebrow" data-reveal>Shipped work</span>
+      <h2 data-reveal>Twelve titles that made it to a store</h2>
+      <p data-reveal>A colouring game that found its audience organically, a kids' pet sim, and a
+      hidden-object adventure for the PC casual market. The other nine are one click away.</p>
+    </div>
+    <div class="grid three">{featured_work}</div>
+    <div style="margin-top:2.4rem" data-reveal>
+      <a class="btn ghost" href="work.html">All twelve shipped titles <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    </div>
   </div>
 </section>
 
@@ -715,23 +815,8 @@ def build_index():
 <section class="section" style="padding-top:0">
   <div class="shell">
     <div class="section-head">
-      <span class="eyebrow" data-reveal>Selected work</span>
-      <h2 data-reveal>Three of twelve</h2>
-      <p data-reveal>A colouring game that found its audience organically, a kids' pet sim, and a
-      hidden-object adventure for the PC casual market. The rest are on the shipped work page.</p>
-    </div>
-    <div class="grid three">{featured}</div>
-    <div style="margin-top:2.4rem" data-reveal>
-      <a class="btn ghost" href="work.html">All twelve shipped titles <span class="arrow" aria-hidden="true">&rarr;</span></a>
-    </div>
-  </div>
-</section>
-
-<section class="section" style="padding-top:0">
-  <div class="shell">
-    <div class="section-head">
       <span class="eyebrow" data-reveal>Education</span>
-      <h2 data-reveal>Not a games degree - and that turned out fine.</h2>
+      <h2 data-reveal>Not a games degree &mdash; and that turned out fine.</h2>
     </div>
     <div class="grid two">
       <div class="card" data-reveal data-reveal-group="edu">
@@ -744,16 +829,18 @@ def build_index():
       </div>
     </div>
     <p class="lead" style="margin-top:2rem" data-reveal>
-      A teaching background is unusually useful when your players are four years old, and
+      A teaching background is unusually useful when your players are four years old, and public
       administration turned out to be exactly the training a Head of Game Design needs when the real
       problem is not the design at all but the schedule around it. Languages: Ukrainian and Russian
-      as native, English at B2.
+      as native, English at B2. There is a life outside all of this too &mdash;
+      <a href="about.html" style="color:var(--accent)">it has its own page</a>.
     </p>
   </div>
 </section>
 
 </main>
-""".format(marquee=marquee, skills=skill_cards, tl=tl, featured=featured)
+""".format(marquee=marquee, skills=skill_cards, tl=tl,
+           featured_proto=featured_proto, featured_work=featured_work)
 
     return (head("{n} - {t}".format(n=NAME, t=TITLE),
                  "Senior game designer with 12 shipped titles across casual, kids and puzzle genres. "
@@ -819,8 +906,9 @@ def build_lab():
         specific design question - does this loop hold up, does this mechanic read, can two people of
         very different ages share a session - and each is a real build you can open in a browser
         rather than a mockup. They run on Cloudflare, most were assembled with AI assistance, and
-        every screenshot here was captured from the live version. Click any image to page through
-        the shots.
+        every screenshot on this page was captured from the live version by walking through the
+        build: menus, meta screens, mid-run gameplay. Hover the thumbnails under a card to page
+        through them, or click any image to open it full size.
       </p>
     </div>
     <div class="grid three">{cards}</div>
@@ -836,10 +924,261 @@ def build_lab():
             + nav("lab.html") + body + footer())
 
 
+
+# ------------------------------------------------------------------ about page
+
+# Each block is one part of the story, with the photos that belong to it.
+# `tall` flags portrait-shaped shots so the grid frames them properly.
+LIFE = [
+    {
+        "kicker": "Where it starts",
+        "title": "A village on a river bend",
+        "shots": ["village-1.webp", "village-2.webp", "village-3.webp",
+                  "village-4.webp", "village-5.webp", "village-6.webp"],
+        "text": [
+            "I grew up in Pechera, a village in the Vinnytsia region that sits on a bend of the "
+            "Southern Bug, with a ruined Potocki palace, an old mill, church domes over the cliff "
+            "and a river you can swim across if you are stubborn about it. It is genuinely "
+            "beautiful, and growing up somewhere beautiful does something to your eye.",
+            "I still think that is where my taste came from. Long before I knew what a level was, "
+            "I was learning what it feels like to walk through a place that has been arranged well "
+            "- where the path takes you, what the landmark on the hill is doing, why you keep "
+            "looking back over your shoulder. Every environment I have designed since is a little "
+            "bit that riverbank."
+        ],
+    },
+    {
+        "kicker": "The soft part",
+        "title": "Nature, and a weakness for animals",
+        "shots": ["animals-1.webp", "animals-2.webp"],
+        "tall": True,
+        "text": [
+            "I love being outdoors and I have never once managed to walk past a cat. This is not a "
+            "hobby so much as a permanent condition - if there is a kitten in the yard, that is "
+            "where I will be for the next twenty minutes.",
+            "It is not unrelated to the work, either. Designing a kitten daycare for four-year-olds "
+            "is much easier when you actually like the animal you are asking a child to look after, "
+            "and when you already know exactly how a cat behaves when it does not want to be picked "
+            "up."
+        ],
+    },
+    {
+        "kicker": "Being useful",
+        "title": "Five years on the water as a rescuer",
+        "shots": ["rescue-1.webp", "rescue-2.webp"],
+        "text": [
+            "It mattered to me to do something with an obvious point to it, so I worked as a "
+            "lifeguard and rescuer. It is a strange job: long stretches of watching nothing happen, "
+            "punctuated by minutes where everything depends on whether you noticed early enough and "
+            "whether the drill is in your hands rather than your head.",
+            "I was recognised for it more than once, including a commendation from the Mayor of "
+            "Kyiv. What I actually took from it is less presentable than a certificate: how a team "
+            "behaves under pressure, why procedure exists, and how much of a good outcome is "
+            "decided long before the emergency, in the boring preparation nobody photographs."
+        ],
+    },
+    {
+        "kicker": "Service",
+        "title": "Lieutenant, infantry platoon commander",
+        "shots": ["army-1.webp", "army-2.webp"],
+        "text": [
+            "I served as an officer in the Ukrainian infantry, a platoon commander with the rank of "
+            "lieutenant, and took part directly in combat operations - both as a soldier and "
+            "responsible for the people under my command. That second part is the one that changed "
+            "me. Being answerable for other people's lives rearranges your sense of what a "
+            "difficult decision actually is.",
+            "It also permanently altered how I read a plan. I am the person on the team who asks "
+            "what happens when this goes wrong, who is responsible when it does, and whether the "
+            "instruction still makes sense to someone tired and under pressure. Deadlines are not "
+            "nothing, but I have a fairly calibrated idea of where they sit."
+        ],
+    },
+    {
+        "kicker": "Off the clock",
+        "title": "Trips that ask something of you",
+        "shots": ["travel-1.webp", "travel-2.webp"],
+        "video": "travel.mp4",
+        "text": [
+            "My preferred holiday is the kind you have to earn: mountains, a heavy pack, weather "
+            "that does not care about your plans, and a view at the top that only exists for people "
+            "who walked up. The Carpathians get most of my free weekends.",
+            "I like the shape of it - a clear goal, a real cost, and a payoff you cannot buy. That "
+            "is also, more or less, the shape of a well-designed game level."
+        ],
+    },
+    {
+        "kicker": "The real passion",
+        "title": "I play everything that comes out",
+        "shots": [],
+        "text": [
+            "Video games are the thing I would be doing anyway. I play new releases as they land, "
+            "across every genre, partly out of professional curiosity and mostly because I cannot "
+            "help myself. Being current is not research to me, it is just Tuesday.",
+            "The one that rearranged my world as a child was "
+            "<a href=\"https://store.steampowered.com/app/32370/STAR_WARS_Knights_of_the_Old_Republic/\" "
+            "target=\"_blank\" rel=\"noopener\">Star Wars: Knights of the Old Republic</a>. It was "
+            "the first time a game made me feel that my choices were mine, that a story could turn "
+            "on something I decided, and that a world could be big enough to have opinions about. "
+            "Everything I have tried to build since has been chasing some version of that feeling."
+        ],
+    },
+    {
+        "kicker": "Around a table",
+        "title": "Board games, which are just design with the lid off",
+        "shots": ["tabletop.webp"],
+        "tall": True,
+        "text": [
+            "I collect and play board games obsessively - Scythe, Arkham Horror, Terraforming Mars, "
+            "Fallout, Ticket to Ride and a shelf that has stopped pretending it has room.",
+            "They are the most honest design school there is. Every rule is visible, every economy "
+            "is on the table, and when something is unbalanced you find out within one evening "
+            "because four people tell you to your face. A lot of what I know about pacing and "
+            "player turns came from being beaten at cardboard."
+        ],
+    },
+    {
+        "kicker": "Reading",
+        "title": "Anime, manga, and a shelf of gothic horror",
+        "shots": ["books-1.webp", "books-2.webp", "books-3.webp"],
+        "text": [
+            "I read constantly, and I have a specific weakness: gothic and horror literature. Poe, "
+            "Lovecraft, Merritt, Bierce, Crowley - the shelf is almost uniformly black-spined and I "
+            "am not sorry about it. Alongside that, plenty of anime and manga, Hannibal and "
+            "Fullmetal Alchemist among the volumes that get re-read.",
+            "Horror is a genuinely useful genre to study, because it lives or dies on pacing and on "
+            "what you withhold. That is exactly the same problem as designing a hidden-object "
+            "adventure or the first minute of a kids' game: knowing precisely how much to show, and "
+            "when."
+        ],
+    },
+]
+
+
+def life_shots(block):
+    shots = block.get("shots", [])
+    if not shots and not block.get("video"):
+        return ""
+    figs = ""
+    for s in shots:
+        path = "assets/img/life/" + s
+        if not os.path.exists(os.path.join(ROOT, path)):
+            continue
+        figs += ('<figure><img src="{p}" alt="{a}" loading="lazy" decoding="async"></figure>'
+                 .format(p=path, a=esc(block["title"])))
+    if block.get("video"):
+        vp = "assets/img/life/" + block["video"]
+        if os.path.exists(os.path.join(ROOT, vp)):
+            figs += ('<figure><video src="{v}" muted loop playsinline controls preload="metadata" '
+                     'aria-label="{a}"></video></figure>').format(v=vp, a=esc(block["title"]))
+    if not figs:
+        return ""
+    cls = "shots"
+    if block.get("tall"):
+        cls += " tall"
+    if figs.count("<figure>") == 1:
+        cls += " one"
+    return '<div class="{c}">{f}</div>'.format(c=cls, f=figs)
+
+
+def build_about():
+    blocks = ""
+    for i, blk in enumerate(LIFE, 1):
+        media = life_shots(blk)
+        paras = "".join("<p>%s</p>" % t for t in blk["text"])
+        if media:
+            blocks += """
+  <div class="story-item" data-reveal>
+    <div class="story-text">
+      <span class="story-kicker"><span class="num">{n:02d}</span> {k}</span>
+      <h3>{t}</h3>
+      {p}
+    </div>
+    {m}
+  </div>""".format(n=i, k=esc(blk["kicker"]), t=esc(blk["title"]), p=paras, m=media)
+        else:
+            blocks += """
+  <div class="story-item" data-reveal style="grid-template-columns:1fr">
+    <div class="story-text">
+      <span class="story-kicker"><span class="num">{n:02d}</span> {k}</span>
+      <h3>{t}</h3>
+      {p}
+    </div>
+  </div>""".format(n=i, k=esc(blk["kicker"]), t=esc(blk["title"]), p=paras)
+
+    facts = [
+        ("From", "Pechera, Vinnytsia region"),
+        ("Based in", "Kyiv, Ukraine"),
+        ("Previously", "Rescuer &middot; Infantry officer"),
+        ("The game that did it", "KOTOR, age eleven"),
+    ]
+    fact_html = "".join(
+        '<div class="fact" data-reveal data-reveal-group="fx"><span class="k">{k}</span>'
+        '<span class="v">{v}</span></div>'.format(k=k, v=v) for k, v in facts)
+
+    body = """<main id="main">
+
+<section class="section" style="padding-bottom:clamp(3rem,6vw,5rem)">
+  <div class="shell">
+    <div class="section-head" style="max-width:none;margin-bottom:clamp(2rem,4vw,3rem)">
+      <span class="eyebrow" data-reveal>About me</span>
+      <h2 data-reveal>The parts that are not on the CV.</h2>
+    </div>
+    <div class="about-hero">
+      <div class="about-portrait" data-reveal>
+        <img src="assets/img/life/portrait.webp" alt="Dmytro Bondar" loading="eager" decoding="async">
+      </div>
+      <div data-reveal style="--d:120ms">
+        <p class="lead">
+          Everything else on this site is about work. This page is about the person doing it, which
+          in my case means a village on a river, five years pulling people out of the water, a
+          lieutenant's shoulder boards, a great many mountains, and a shelf of gothic horror that
+          has quietly taken over one wall.
+        </p>
+        <p class="lead" style="margin-top:1.1rem">
+          None of it is decoration. Design is a job about people - what they will understand, what
+          they will feel, what they will do when something goes wrong - and most of what I know
+          about people I did not learn at a desk.
+        </p>
+        <div class="fact-strip">{facts}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="shell">
+    <div class="story">{blocks}</div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="shell">
+    <p class="quote" data-reveal>
+      If there is a thread running through all of it, it is probably this: I like being useful, I
+      like things that are made well, and I have never been able to leave a good system alone
+      without taking it apart to see how it works.
+    </p>
+    <div style="margin-top:2.4rem" data-reveal>
+      <a class="btn" href="lab.html">Now go play something <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+""".format(facts=fact_html, blocks=blocks)
+
+    return (head("About me - " + NAME,
+                 "The parts that are not on the CV: a village in Vinnytsia region, five years as a "
+                 "rescuer, service as an infantry officer, mountains, board games and gothic horror.",
+                 "about.html")
+            + nav("about.html") + body + footer())
+
+
 # ------------------------------------------------------------------------ main
 
 if __name__ == "__main__":
-    pages = {"index.html": build_index(), "work.html": build_work(), "lab.html": build_lab()}
+    pages = {"index.html": build_index(), "lab.html": build_lab(),
+             "work.html": build_work(), "about.html": build_about()}
     for fname, content in pages.items():
         with open(os.path.join(ROOT, fname), "w", encoding="utf-8") as f:
             f.write(content)

@@ -27,8 +27,8 @@
       <span class="mark" aria-hidden="true">DB</span>
       <span>Dmytro Bondar<small>SENIOR GAME DESIGNER</small></span>
     </a>
-    <nav class="nav-links" aria-label="Main"><a href="index.html">Home</a><a href="work.html" class="active" aria-current="page">Shipped work</a><a href="lab.html">Prototypes</a></nav>
-    <a class="btn nav-cta" href="mailto:dimabondar2812@gmail.com">Get in touch <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    <nav class="nav-links" aria-label="Main"><a href="index.html">Home</a><a href="lab.html">Prototypes</a><a href="work.html" class="active" aria-current="page">Shipped work</a><a href="about.html">About me</a><a class="nav-contact-m" href="#" data-contact>Get in touch &rarr;</a></nav>
+    <button class="btn nav-cta" type="button" data-contact>Get in touch <span class="arrow" aria-hidden="true">&rarr;</span></button>
     <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -245,7 +245,7 @@
 </main>
 <footer class="footer">
   <div class="shell">
-    <p class="big-cta" data-reveal>Have a game that needs a designer?<br><a href="mailto:dimabondar2812@gmail.com">dimabondar2812@gmail.com</a></p>
+    <p class="big-cta" data-reveal>Have a game that needs a designer?<br><a href="#" data-contact>Write me a message &rarr;</a></p>
     <div class="footer-grid" style="margin-top:3.2rem">
       <div>
         <h4>About this site</h4>
@@ -255,14 +255,16 @@
         <h4>Pages</h4>
         <div class="footer-list">
           <a href="index.html">Home</a>
-          <a href="work.html">Shipped work</a>
           <a href="lab.html">Prototypes</a>
+          <a href="work.html">Shipped work</a>
+          <a href="about.html">About me</a>
         </div>
       </div>
       <div>
         <h4>Elsewhere</h4>
         <div class="footer-list">
-          <a href="mailto:dimabondar2812@gmail.com">Email</a>
+          <a href="#" data-contact>Send a message</a>
+          <a href="mailto:dimabondar2812@gmail.com">dimabondar2812@gmail.com</a>
           <a href="https://www.linkedin.com/in/dmytro-bondar-63a94a144/" target="_blank" rel="noopener">LinkedIn</a>
           <a href="https://github.com/jotunlegion" target="_blank" rel="noopener">GitHub</a>
           <a href="tel:+380660741499">+380 66 074 1499</a>
@@ -281,6 +283,38 @@
   <button class="lb-nav prev" aria-label="Previous">&#8249;</button>
   <button class="lb-nav next" aria-label="Next">&#8250;</button>
   <figure><img alt=""><figcaption></figcaption></figure>
+</div>
+
+<div class="modal" id="contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+  <div class="modal-card">
+    <button class="modal-close" type="button" aria-label="Close">&times;</button>
+    <h3 id="contact-title">Say hello</h3>
+    <p>A role, a project, a question about something on this site &mdash; all welcome. Write below and it lands straight in my inbox.</p>
+    <form action="https://formsubmit.co/ajax/dimabondar2812@gmail.com" method="post" data-mailto="dimabondar2812@gmail.com" novalidate>
+      <div class="field">
+        <label for="cf-name">Your name</label>
+        <input id="cf-name" name="name" type="text" autocomplete="name" placeholder="Jane Doe" required>
+      </div>
+      <div class="field">
+        <label for="cf-email">Your email</label>
+        <input id="cf-email" name="email" type="email" autocomplete="email" placeholder="jane@studio.com" required>
+      </div>
+      <div class="field">
+        <label for="cf-subject">Subject</label>
+        <input id="cf-subject" name="subject" type="text" placeholder="Senior game designer role">
+      </div>
+      <div class="field">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="message" placeholder="Tell me what you are building." required></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" type="submit">Send message <span class="arrow" aria-hidden="true">&rarr;</span></button>
+        <a class="btn ghost" href="mailto:dimabondar2812@gmail.com">Use my mail app instead</a>
+      </div>
+      <p class="form-status" role="status" aria-live="polite"></p>
+      <p class="form-note">Or reach me directly: <a href="mailto:dimabondar2812@gmail.com">dimabondar2812@gmail.com</a> &middot; <a href="tel:+380660741499">+380 66 074 1499</a></p>
+    </form>
+  </div>
 </div>
 
 <script src="assets/js/main.js"></script>
