@@ -719,10 +719,6 @@ def build_index():
 <section class="hero">
   <div class="shell hero-grid">
     <div>
-      <div class="hero-role" data-reveal>
-        <span class="dot" aria-hidden="true"></span> Open to senior design roles
-        <span aria-hidden="true">&middot;</span> Kyiv, Ukraine
-      </div>
       <h1 data-reveal style="--d:60ms">I build <span class="grad">playable prototypes</span>, then design around what works.</h1>
       <p class="lead" data-reveal style="--d:130ms">
         I am a game designer with experience across casual genres, puzzle games, indie projects,
