@@ -251,6 +251,24 @@ PROJECTS = [
 
 PROTOTYPES = [
     {
+        "slug": "miami-block-rush",
+        "name": "Miami Block Rush",
+        "kicker": "Road-building street racer",
+        "url": "https://miami-block-rush.dimabondar2812.workers.dev",
+        "stack": ["HTML5 Canvas", "Vanilla JS", "Cloudflare Workers"],
+        "blurb": (
+            "An 80s Miami street race where the road does not exist until you build it: you drop "
+            "Tetris-like blocks into the air ahead of your car while two rival gangs do the same "
+            "and the police close in from behind. The winner is whoever carries the most money "
+            "over the line, not whoever arrives first, so every run trades speed against detours "
+            "for cash and nitro. Around it sits a full Need for Speed-style meta layer - a garage "
+            "with a rotating voxel turntable, a dealership of twenty cars from the 80s to the "
+            "2000s, performance tuning that measurably changes top speed, acceleration and jump "
+            "distance, visual customisation and an in-game radio. Pixel art, physics and "
+            "soundtrack were all built for phones in landscape."
+        ),
+    },
+    {
         "slug": "they-will-make-more",
         "name": "They Will Make More",
         "kicker": "Idle strategy / political satire",
@@ -345,7 +363,7 @@ PROTOTYPES = [
 
 # Prototypes lead the site, so their order is deliberate: the two most
 # finished builds first, the deepest systems piece last.
-_PROTO_ORDER = ["warmatch", "gravity-bridge", "floramenta",
+_PROTO_ORDER = ["warmatch", "miami-block-rush", "gravity-bridge", "floramenta",
                 "binitown", "pixeldron", "they-will-make-more"]
 PROTOTYPES.sort(key=lambda p: _PROTO_ORDER.index(p["slug"]))
 
@@ -944,8 +962,8 @@ def build_lab():
 """.format(cards=cards)
 
     return (head("Prototypes - " + NAME,
-                 "Six playable game prototypes built with AI-assisted development and hosted on "
-                 "Cloudflare - idle strategy, match-3, FPV drone combat and more.",
+                 "Seven playable game prototypes built with AI-assisted development and hosted on "
+                 "Cloudflare - idle strategy, match-3, street racing, FPV drone combat and more.",
                  "lab.html")
             + nav("lab.html") + body + footer())
 
