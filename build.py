@@ -251,6 +251,21 @@ PROJECTS = [
 
 PROTOTYPES = [
     {
+        "slug": "have-no-console-6",
+        "name": "HAVE NO CONSOLE VI",
+        "kicker": "Open-world Miami sandbox",
+        "url": "https://have-no-console-6.dimabondar2812.workers.dev",
+        "stack": ["Three.js", "Vanilla JS", "WebLLM"],
+        "blurb": (
+            "A top-down action sandbox set in a real slice of Miami: Downtown, Brickell, "
+            "the Port and Biscayne Bay, reconstructed from city geometry and OpenStreetMap. "
+            "Explore on foot or steal a car, step inside buildings, visit a garage, or take "
+            "to the water and the sky. Traffic, pedestrians and emergency services share "
+            "the streets under a full day-and-night cycle. Pixel-voxel visuals meet "
+            "local AI conversations with the people of the city, all running in the browser."
+        ),
+    },
+    {
         "slug": "miami-block-rush",
         "name": "Miami Block Rush",
         "kicker": "Road-building street racer",
@@ -363,8 +378,10 @@ PROTOTYPES = [
 
 # Prototypes lead the site, so their order is deliberate: the two most
 # finished builds first, the deepest systems piece last.
-_PROTO_ORDER = ["warmatch", "miami-block-rush", "gravity-bridge", "floramenta",
+_PROTO_ORDER = ["have-no-console-6", "warmatch", "miami-block-rush", "gravity-bridge", "floramenta",
                 "binitown", "pixeldron", "they-will-make-more"]
+# Keep hidden prototypes and their assets available for future restoration.
+PROTOTYPES = [p for p in PROTOTYPES if p["slug"] != "binitown"]
 PROTOTYPES.sort(key=lambda p: _PROTO_ORDER.index(p["slug"]))
 
 # --------------------------------------------------------------------- helpers
@@ -604,15 +621,14 @@ def project_card(p, folder, group):
   {strip}
   <div class="proj-body">
     <div class="proj-top">
-      {icon}
-      <div class="proj-title"><h3>{name}</h3>{meta}</div>
+{icon}      <div class="proj-title"><h3>{name}</h3>{meta}</div>
     </div>
     <p>{blurb}</p>
     <div class="proj-tags">{tags}</div>
     {foot}
   </div>
 </article>""".format(data_tags=data_tags, group=group, shot=shot_html, strip=strip,
-                     icon=icon_html, name=esc(p["name"]), meta=meta, blurb=esc(p["blurb"]),
+                     icon=("      " + icon_html + "\n") if icon_html else "", name=esc(p["name"]), meta=meta, blurb=esc(p["blurb"]),
                      tags=tags, foot=foot)
 
 
