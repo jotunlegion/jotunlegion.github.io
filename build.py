@@ -266,6 +266,23 @@ PROTOTYPES = [
         ),
     },
     {
+        "slug": "path-of-card-hero",
+        "name": "Path of Card Hero",
+        "kicker": "Dark-fantasy poker roguelite",
+        "url": "https://path-of-card-hero.dimabondar2812.workers.dev",
+        "stack": ["HTML5 Canvas", "Vanilla JS", "ElevenLabs", "Cloudflare Workers"],
+        "blurb": (
+            "A first-person pixel-art road where every blow is a poker hand. Cards burst from "
+            "the deck onto a mahjong-style table, only uncovered ones can be taken, and the "
+            "enemy draws from the same table, so every pick is also a card you deny them. "
+            "Fifty locations across five regions lead to region bosses, with loot in eight "
+            "rarities, twenty item sets and a skill tree. Between fights there is a village "
+            "with a tavern of draw-poker gamblers, a dwarf merchant and a bathhouse where "
+            "card Farkle is played against the attendants, each reacting with voiced, wordless "
+            "emotions. Built for phones in portrait, with a built-in scene editor."
+        ),
+    },
+    {
         "slug": "miami-block-rush",
         "name": "Miami Block Rush",
         "kicker": "Road-building street racer",
@@ -378,7 +395,7 @@ PROTOTYPES = [
 
 # Prototypes lead the site, so their order is deliberate: the two most
 # finished builds first, the deepest systems piece last.
-_PROTO_ORDER = ["have-no-console-6", "warmatch", "miami-block-rush", "gravity-bridge", "floramenta",
+_PROTO_ORDER = ["have-no-console-6", "path-of-card-hero", "warmatch", "miami-block-rush", "gravity-bridge", "floramenta",
                 "binitown", "pixeldron", "they-will-make-more"]
 # Keep hidden prototypes and their assets available for future restoration.
 PROTOTYPES = [p for p in PROTOTYPES if p["slug"] != "binitown"]
@@ -978,7 +995,7 @@ def build_lab():
 """.format(cards=cards)
 
     return (head("Prototypes - " + NAME,
-                 "Seven playable game prototypes built with AI-assisted development and hosted on "
+                 "Eight playable game prototypes built with AI-assisted development and hosted on "
                  "Cloudflare - idle strategy, match-3, street racing, FPV drone combat and more.",
                  "lab.html")
             + nav("lab.html") + body + footer())

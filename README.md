@@ -10,7 +10,7 @@ Mirror: <https://jotunlegion.github.io> (GitHub Pages, same build)
 | Page | What it holds |
 |---|---|
 | `index.html` | Positioning, the prototypes up front, working method, shipped work, experience, education |
-| `lab.html` | 7 playable prototypes, each with captured screenshots of menus, meta screens and gameplay |
+| `lab.html` | 8 playable prototypes, each with captured screenshots of menus, meta screens and gameplay |
 | `work.html` | 12 shipped titles with store screenshots, descriptions and filters |
 | `about.html` | The personal page: village, animals, rescue service, army, travel, games, tabletop, books |
 | `404.html` | Real not-found page — without it Cloudflare answers unknown paths with the home page and a 200 |
@@ -62,4 +62,5 @@ in `build.py`'s `footer()`.
 | BiniTown | https://binitown.pages.dev |
 | PixelDron | https://pixeldron.pages.dev |
 | Miami Block Rush | https://miami-block-rush.dimabondar2812.workers.dev |
+| Path of Card Hero | https://path-of-card-hero.dimabondar2812.workers.dev |
 | They Will Make More | https://they-will-make-more.dimabondar2812.workers.dev |
